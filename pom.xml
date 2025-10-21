@@ -4,15 +4,24 @@
 
   <groupId>com.github.alxsshv</groupId>
   <artifactId>log4j2-kafka-appender</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>log4j2-kafka-appender</name>
   <url>https://github.com/alxsshv/log4j2-kafka-appender</url>
 
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>alxsshv</name>
+      <url>https://maven.pkg.github.com/alxsshv/log4j2-kafka-appender</url>
+    </repository>
+  </distributionManagement>
 
   <dependencies>
     <dependency>

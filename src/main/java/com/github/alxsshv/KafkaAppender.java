@@ -17,7 +17,7 @@ import org.apache.logging.log4j.core.util.Booleans;
 
 import java.io.Serializable;
 
-
+@SuppressWarnings("unused")
 @Plugin(name = "KafkaAppender",
         category = Node.CATEGORY)
 public class KafkaAppender extends AbstractAppender {
@@ -28,11 +28,10 @@ public class KafkaAppender extends AbstractAppender {
                             Filter filter,
                             Layout<? extends Serializable> layout,
                             boolean ignoreExceptions,
-                            Property[] properties,
                             String topic,
-                            Property[] kafkaProperties) {
+                            Property[] properties) {
         super(name, filter, layout, ignoreExceptions, properties);
-        this.kafkaSender = new KafkaSender(topic, kafkaProperties);
+        this.kafkaSender = new KafkaSender(topic, properties);
     }
 
     @PluginFactory
@@ -41,9 +40,9 @@ public class KafkaAppender extends AbstractAppender {
             String name,
 
             @PluginAttribute("ignoreExceptions")
-            String ignoreExceptionAttribute,
+            String ignoreException,
 
-            @PluginAttribute("kafkaTopic")
+            @PluginAttribute("topic")
             @Required(message = "Please set appender attribute kafkaTopic")
             String topic,
 
@@ -51,16 +50,14 @@ public class KafkaAppender extends AbstractAppender {
 
             @PluginElement("Layout") Layout<? extends Serializable> layoutElement,
 
-            @PluginElement("KafkaProperties")
-            @Required(message = "please set element KafkaProperties. Requirement property - bootstrap.servers.")
-            Property[] kafkaProperties,
+            @PluginElement("Property")
+            @Required(message = "please set element KafkaProperties. Requirement properties: bootstrap.servers, group.id")
+            Property[] properties)
+            {
 
-            @PluginElement("Properties")
-            Property[] properties) {
-
-        boolean ignoreExceptions = Booleans.parseBoolean(ignoreExceptionAttribute, true);
+        boolean ignoreExceptions = Booleans.parseBoolean(ignoreException, true);
         Layout<? extends Serializable> layout = (layoutElement != null) ? layoutElement : JsonLayout.createDefaultLayout();
-        return new KafkaAppender(name, filter, layout, ignoreExceptions, properties, topic, kafkaProperties);
+        return new KafkaAppender(name, filter, layout, ignoreExceptions, topic, properties);
     }
 
     @Override
